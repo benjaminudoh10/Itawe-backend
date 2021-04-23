@@ -3,9 +3,18 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinColumn,
+  OneToMany,
+  OneToOne,
   PrimaryColumn,
   UpdateDateColumn,
 } from "typeorm";
+
+import { Address } from "./Address.entity";
+import { Order } from "./Order.entity";
+import { RatedBook } from "./RatedBook.entity";
+import { Review } from "./Review.entity";
+import { SavedBook } from "./SavedBook.entity";
 
 @Entity({ name: "users" })
 export class User {
@@ -23,6 +32,25 @@ export class User {
 
   @Column()
   password: string;
+
+  @OneToOne(() => Address, (address) => address.user, {
+    cascade: true,
+    eager: true,
+  })
+  @JoinColumn()
+  address: Address;
+
+  @OneToMany(() => RatedBook, (book) => book.user, { cascade: true })
+  ratedBooks: RatedBook[];
+
+  @OneToMany(() => SavedBook, (book) => book.user, { cascade: true })
+  savedBooks: SavedBook[];
+
+  @OneToMany(() => Review, (review) => review.user, { cascade: true })
+  reviews: Review[];
+
+  @OneToMany(() => Order, (order) => order.user, { cascade: true })
+  orders: Order[];
 
   @CreateDateColumn()
   createdAt: Date;
