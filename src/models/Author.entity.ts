@@ -1,4 +1,5 @@
 import {
+  BeforeInsert,
   Column,
   CreateDateColumn,
   DeleteDateColumn,
@@ -8,6 +9,7 @@ import {
   UpdateDateColumn,
 } from "typeorm";
 import { Book } from "./Book.entity";
+import { v4 as uuidv4 } from "uuid";
 
 @Entity({ name: "authors" })
 export class Author {
@@ -31,4 +33,9 @@ export class Author {
 
   @DeleteDateColumn()
   deletedAt: Date;
+
+  @BeforeInsert()
+  addId() {
+    this.id = uuidv4();
+  }
 }

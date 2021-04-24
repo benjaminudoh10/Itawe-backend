@@ -2,7 +2,9 @@ import * as dotenv from "dotenv";
 import express, { Request, Response } from "express";
 import cors from "cors";
 
-// import { routes } from './routes';
+import { router } from "./routes";
+import bodyParser from "body-parser";
+import { errors } from "celebrate";
 
 dotenv.config();
 
@@ -13,13 +15,11 @@ if (!process.env.PORT) {
 
 const app = express();
 app.use(cors());
+app.use(bodyParser.json());
 app.use(express.json());
 app.use(express.text());
-// app.use(routes);
 
-// app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-//   handleError(err, res);
-// });
+app.use(router);
 
 app.get("/health", (request: Request, response: Response) => {
   response
@@ -27,5 +27,8 @@ app.get("/health", (request: Request, response: Response) => {
     .json({ message: "Works fine!", headers: request.headers })
     .end();
 });
+
+app.disable("x-powered-by");
+app.use(errors());
 
 export { app };

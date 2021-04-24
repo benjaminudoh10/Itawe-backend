@@ -1,4 +1,5 @@
 import {
+  BeforeInsert,
   Column,
   CreateDateColumn,
   DeleteDateColumn,
@@ -7,6 +8,8 @@ import {
   PrimaryColumn,
   UpdateDateColumn,
 } from "typeorm";
+import { v4 as uuidv4 } from "uuid";
+
 import { User } from "./User.entity";
 
 @Entity({ name: "addresses" })
@@ -43,4 +46,9 @@ export class Address {
 
   @DeleteDateColumn()
   deletedAt: Date;
+
+  @BeforeInsert()
+  addId() {
+    this.id = uuidv4();
+  }
 }

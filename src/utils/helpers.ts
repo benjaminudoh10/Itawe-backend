@@ -2,7 +2,7 @@ export function buildResponse(
   status: number,
   success: boolean,
   data: any,
-  error: string
+  error?: string
 ) {
   return {
     success,

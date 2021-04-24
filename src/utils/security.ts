@@ -39,12 +39,10 @@ export function validateJWT(
 }
 
 export function buildJWT(user: User) {
-  const { id, email, firstName, lastName, role } = user;
+  const { id, email, role } = user;
   const fields = {
     id,
     email,
-    firstName,
-    lastName,
     role,
   };
   return jwt.sign(fields, process.env.SECRET_TOKEN as string, {

@@ -1,4 +1,5 @@
 import {
+  BeforeInsert,
   Column,
   CreateDateColumn,
   DeleteDateColumn,
@@ -9,6 +10,8 @@ import {
   PrimaryColumn,
   UpdateDateColumn,
 } from "typeorm";
+import { v4 as uuidv4 } from "uuid";
+
 import { UserRole } from "../interfaces/interfaces";
 
 import { Address } from "./Address.entity";
@@ -31,7 +34,7 @@ export class User {
   @Column()
   lastName: string;
 
-  @Column()
+  @Column({ nullable: false, select: false })
   password: string;
 
   @Column({ type: "enum", enum: UserRole, default: UserRole.USER })
@@ -64,4 +67,9 @@ export class User {
 
   @DeleteDateColumn()
   deletedAt: Date;
+
+  @BeforeInsert()
+  addId() {
+    this.id = uuidv4();
+  }
 }

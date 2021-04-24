@@ -1,4 +1,12 @@
-import { Column, Entity, ManyToOne, PrimaryColumn } from "typeorm";
+import {
+  BeforeInsert,
+  Column,
+  Entity,
+  ManyToOne,
+  PrimaryColumn,
+} from "typeorm";
+import { v4 as uuidv4 } from "uuid";
+
 import { Book } from "./Book.entity";
 import { User } from "./User.entity";
 
@@ -15,4 +23,9 @@ export class Review {
 
   @Column({ nullable: false })
   review: string;
+
+  @BeforeInsert()
+  addId() {
+    this.id = uuidv4();
+  }
 }
