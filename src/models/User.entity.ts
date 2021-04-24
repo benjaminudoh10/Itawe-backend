@@ -9,6 +9,7 @@ import {
   PrimaryColumn,
   UpdateDateColumn,
 } from "typeorm";
+import { UserRole } from "../interfaces/interfaces";
 
 import { Address } from "./Address.entity";
 import { Order } from "./Order.entity";
@@ -32,6 +33,9 @@ export class User {
 
   @Column()
   password: string;
+
+  @Column({ type: "enum", enum: UserRole, default: UserRole.USER })
+  role: UserRole;
 
   @OneToOne(() => Address, (address) => address.user, {
     cascade: true,
