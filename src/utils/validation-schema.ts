@@ -11,3 +11,17 @@ export const userLoginSchema = Joi.object().keys({
   email: Joi.string().trim().email().lowercase().required(),
   password: Joi.string().min(6).required(),
 });
+
+export const bookSchema = Joi.object().keys({
+  title: Joi.string().trim().required(),
+  description: Joi.string().trim().required(),
+  price: Joi.number().min(0).required(),
+  stock: Joi.number().min(0).required(),
+  pages: Joi.number().min(1).required(),
+  language: Joi.string().trim().required(),
+  image: Joi.string().trim().required(),
+});
+
+export const bookIdSchema = Joi.object().keys({
+  bookId: Joi.string().guid({ version: "uuidv4" }).message("Invalid book id"),
+});

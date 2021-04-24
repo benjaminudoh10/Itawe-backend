@@ -62,11 +62,11 @@ export default class UserService {
     }
   }
 
-  hashPassword(password: string) {
+  private hashPassword(password: string) {
     return hashSync(password, genSaltSync(10));
   }
 
   async getUser(id: string) {
-    return await this.userRepo.findOne({ id });
+    return this.userRepo.findOne({ id });
   }
 }

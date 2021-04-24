@@ -3,9 +3,11 @@ import { UserRole } from "../interfaces/interfaces";
 export class JWTUser {
   readonly id: string;
   private role: UserRole;
+  private email: string;
 
   constructor(details: any) {
-    this.id = details.sub;
+    this.id = details.id;
+    this.email = details.email;
     this.role = details.role;
   }
 
@@ -15,5 +17,9 @@ export class JWTUser {
 
   getUsername(): string {
     return this.id;
+  }
+
+  getEmail(): string {
+    return this.email;
   }
 }
