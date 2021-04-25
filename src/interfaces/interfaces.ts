@@ -37,3 +37,8 @@ export interface AuthorInterface {
   firstName: string;
   lastName: string;
 }
+
+export interface SavedBookInterface {
+  user: string;
+  book: string;
+}

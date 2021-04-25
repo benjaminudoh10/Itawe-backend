@@ -1,10 +1,15 @@
 import { getRepository } from "typeorm";
-import { BookInterface, FilterParams } from "../interfaces/interfaces";
-import { Author } from "../models/Author.entity";
+import {
+  BookInterface,
+  FilterParams,
+  SavedBookInterface,
+} from "../interfaces/interfaces";
 import { Book } from "../models/Book.entity";
+import { SavedBook } from "../models/SavedBook.entity";
 
 export default class BookService {
   private bookRepo = getRepository(Book);
+  private savedBookRepo = getRepository(SavedBook);
 
   async createBook(bookData: BookInterface) {
     try {
@@ -63,5 +68,38 @@ export default class BookService {
     }
 
     return book;
+  }
+
+  async saveBook(savedBookData: SavedBookInterface) {
+    const data = {
+      user: savedBookData.user as any,
+      book: savedBookData.book as any,
+    };
+    let saved = await this.savedBookRepo.findOne(data);
+    if (saved) {
+      this.savedBookRepo.remove(saved);
+      return {
+        message: "Book successfully removed from saved list",
+      };
+    } else {
+      saved = this.savedBookRepo.create(data);
+      await this.savedBookRepo.save(saved);
+      return {
+        message: "Book successfully added to saved list",
+      };
+    }
+  }
+
+  async getSavedBooks(userId: string) {
+    const savedBooks = await this.savedBookRepo.find({
+      where: {
+        user: userId,
+      },
+      relations: ["book"],
+    });
+
+    const books = savedBooks.map((saved) => saved.book);
+
+    return books;
   }
 }
