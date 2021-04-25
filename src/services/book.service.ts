@@ -9,8 +9,7 @@ export default class BookService {
   async createBook(bookData: BookInterface) {
     try {
       let book = this.bookRepo.create(bookData);
-      book.author = new Author();
-      book.author.id = bookData.authorId;
+      book.author = bookData.authorId as any;
       book = await this.bookRepo.save(book);
 
       return book;
@@ -30,7 +29,7 @@ export default class BookService {
       this.bookRepo.merge(book, bookData);
       this.bookRepo.update(
         { id: bookData.id },
-        { ...book, author: { id: bookData.authorId } }
+        { ...book, author: bookData.authorId as any }
       );
 
       return book;
