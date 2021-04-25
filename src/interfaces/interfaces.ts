@@ -24,9 +24,16 @@ export interface BookInterface {
   pages: number;
   language: string;
   image: string;
+  authorId: string;
 }
 
 export interface FilterParams {
   limit: number;
   page: number;
+}
+
+export interface AuthorInterface {
+  id?: string;
+  firstName: string;
+  lastName: string;
 }

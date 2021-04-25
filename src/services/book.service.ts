@@ -1,7 +1,7 @@
 import { getRepository } from "typeorm";
 import { BookInterface, FilterParams } from "../interfaces/interfaces";
+import { Author } from "../models/Author.entity";
 import { Book } from "../models/Book.entity";
-import { buildResponse } from "../utils/helpers";
 
 export default class BookService {
   private bookRepo = getRepository(Book);
@@ -9,36 +9,33 @@ export default class BookService {
   async createBook(bookData: BookInterface) {
     try {
       let book = this.bookRepo.create(bookData);
+      book.author = new Author();
+      book.author.id = bookData.authorId;
       book = await this.bookRepo.save(book);
 
-      return buildResponse(200, true, {
-        message: "Book created successfully.",
-      });
+      return book;
     } catch (error) {
       console.log(error);
-      return buildResponse(500, false, null, "Error while adding new book.");
+      return null;
     }
   }
 
   async updateBook(bookData: BookInterface) {
     try {
-      let { data: book } = await this.getBook(bookData.id as string);
+      let book = await this.getBook(bookData.id as string);
       if (!book) {
-        return buildResponse(
-          404,
-          false,
-          null,
-          "Book with provided id does not exist"
-        );
+        throw new Error("Book with provided id does not exist");
       }
 
       this.bookRepo.merge(book, bookData);
-      book = await this.bookRepo.save(book);
+      this.bookRepo.update(
+        { id: bookData.id },
+        { ...book, author: { id: bookData.authorId } }
+      );
 
-      return buildResponse(200, true, book);
+      return book;
     } catch (error) {
-      console.log(error);
-      return buildResponse(500, false, null, "Error while updating book.");
+      throw new Error("Error occured while updating book");
     }
   }
 
@@ -57,20 +54,15 @@ export default class BookService {
       },
     };
 
-    return buildResponse(200, true, data);
+    return data;
   }
 
   async getBook(id: string) {
     const book = await this.bookRepo.findOne({ id });
     if (!book) {
-      return buildResponse(
-        404,
-        false,
-        null,
-        "Book with given id does not exist"
-      );
+      throw new Error("Book with given id not found");
     }
 
-    return buildResponse(200, true, book);
+    return book;
   }
 }

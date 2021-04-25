@@ -45,7 +45,7 @@ export class Book {
   @Column({ nullable: false })
   image: string;
 
-  @ManyToOne(() => Author, (author) => author.books)
+  @ManyToOne(() => Author, (author) => author.books, { eager: true })
   @JoinColumn()
   author: Author;
 

@@ -20,8 +20,27 @@ export const bookSchema = Joi.object().keys({
   pages: Joi.number().min(1).required(),
   language: Joi.string().trim().required(),
   image: Joi.string().trim().required(),
+  authorId: Joi.string()
+    .guid({ version: "uuidv4" })
+    .message("Innvalid author id")
+    .required(),
 });
 
 export const bookIdSchema = Joi.object().keys({
-  bookId: Joi.string().guid({ version: "uuidv4" }).message("Invalid book id"),
+  bookId: Joi.string()
+    .guid({ version: "uuidv4" })
+    .message("Invalid book id")
+    .required(),
+});
+
+export const authorSchema = Joi.object().keys({
+  firstName: Joi.string().trim().required(),
+  lastName: Joi.string().trim().required(),
+});
+
+export const authorIdSchema = Joi.object().keys({
+  authorId: Joi.string()
+    .guid({ version: "uuidv4" })
+    .message("Invalid author id")
+    .required(),
 });
