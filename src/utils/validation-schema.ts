@@ -48,3 +48,21 @@ export const authorIdSchema = Joi.object().keys({
 export const reviewSchema = Joi.object().keys({
   review: Joi.string().trim().required(),
 });
+
+export const voucherSchema = Joi.object().keys({
+  code: Joi.string().trim().required(),
+  discount: Joi.number().min(1).required(),
+  numberOfTimesUsed: Joi.number().default(0),
+  allowedUsageTimes: Joi.number().optional().allow(null),
+  bookId: Joi.string()
+    .guid({ version: "uuidv4" })
+    .message("Invalid book id provided")
+    .required(),
+});
+
+export const voucherIdSchema = Joi.object().keys({
+  voucherId: Joi.string()
+    .guid({ version: "uuidv4" })
+    .message("Invalid voucher id")
+    .required(),
+});

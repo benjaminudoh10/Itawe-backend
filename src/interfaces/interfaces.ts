@@ -48,3 +48,12 @@ export interface BookReviewInterface {
   book: string;
   review: string;
 }
+
+export interface VoucherInterface {
+  id?: string;
+  code: string;
+  discount: number;
+  numberOfTimesUsed: number;
+  allowedUsageTimes?: number;
+  bookId: string;
+}

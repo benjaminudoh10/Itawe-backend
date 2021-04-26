@@ -29,7 +29,7 @@ export class Voucher {
   @Column({ nullable: false, default: 0 })
   numberOfTimesUsed: number;
 
-  @Column()
+  @Column({ nullable: true })
   allowedUsageTimes: number;
 
   @OneToOne(() => Book, (book) => book.voucher, {

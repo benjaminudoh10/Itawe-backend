@@ -32,7 +32,7 @@ bookRoutes.post(
     } else {
       data = buildResponse(500, false, null, "Error while creating book.");
     }
-    return response.status(200).json(data).end();
+    return response.status(data.status).json(data).end();
   }
 );
 
@@ -54,7 +54,7 @@ bookRoutes.put(
     } catch (error) {
       data = buildResponse(500, false, null, `${error.message}`);
     }
-    return response.status(200).json(data).end();
+    return response.status(data.status).json(data).end();
   }
 );
 

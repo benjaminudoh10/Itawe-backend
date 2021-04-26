@@ -30,12 +30,8 @@ export default class BookService {
   async updateBook(bookData: BookInterface) {
     try {
       let book = await this.getBook(bookData.id as string);
-      if (!book) {
-        throw new Error("Book with provided id does not exist");
-      }
-
       this.bookRepo.merge(book, bookData);
-      this.bookRepo.update(
+      await this.bookRepo.update(
         { id: bookData.id },
         { ...book, author: bookData.authorId as any }
       );
