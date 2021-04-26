@@ -44,3 +44,7 @@ export const authorIdSchema = Joi.object().keys({
     .message("Invalid author id")
     .required(),
 });
+
+export const reviewSchema = Joi.object().keys({
+  review: Joi.string().trim().required(),
+});

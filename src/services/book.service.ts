@@ -1,15 +1,18 @@
 import { getRepository } from "typeorm";
 import {
   BookInterface,
+  BookReviewInterface,
   FilterParams,
   SavedBookInterface,
 } from "../interfaces/interfaces";
 import { Book } from "../models/Book.entity";
+import { Review } from "../models/Review.entity";
 import { SavedBook } from "../models/SavedBook.entity";
 
 export default class BookService {
   private bookRepo = getRepository(Book);
   private savedBookRepo = getRepository(SavedBook);
+  private reviewRepo = getRepository(Review);
 
   async createBook(bookData: BookInterface) {
     try {
@@ -101,5 +104,37 @@ export default class BookService {
     const books = savedBooks.map((saved) => saved.book);
 
     return books;
+  }
+
+  async addReview(reviewData: BookReviewInterface) {
+    const data = {
+      user: reviewData.user as any,
+      book: reviewData.book as any,
+      review: reviewData.review,
+    };
+
+    let review = this.reviewRepo.create(data);
+    await this.reviewRepo.save(review);
+    return {
+      message: "Review successfully added to book.",
+    };
+  }
+
+  async getBookReviews(bookId: string, filter: FilterParams) {
+    const [reviews, total] = await this.reviewRepo.findAndCount({
+      where: { book: bookId },
+      skip: (filter.page - 1) * filter.limit,
+      take: filter.limit,
+    });
+    const data = {
+      reviews,
+      meta: {
+        total,
+        page: filter.page,
+        limit: filter.limit,
+      },
+    };
+
+    return data;
   }
 }

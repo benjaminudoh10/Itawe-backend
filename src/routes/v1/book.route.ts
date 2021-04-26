@@ -1,11 +1,19 @@
 import { celebrate } from "celebrate";
 import { Request, Response, Router } from "express";
-import { BookInterface, SavedBookInterface } from "../../interfaces/interfaces";
+import {
+  BookInterface,
+  SavedBookInterface,
+  BookReviewInterface,
+} from "../../interfaces/interfaces";
 import { checkAdmin } from "../../middlewares/authorizer";
 import BookService from "../../services/book.service";
 import { buildResponse, getFilter } from "../../utils/helpers";
 import { JWTUser } from "../../utils/JWTUser";
-import { bookIdSchema, bookSchema } from "../../utils/validation-schema";
+import {
+  bookIdSchema,
+  bookSchema,
+  reviewSchema,
+} from "../../utils/validation-schema";
 
 export const bookRoutes = Router();
 
@@ -87,6 +95,36 @@ bookRoutes.post(
     } as SavedBookInterface;
     const saved = await new BookService().saveBook(savedBookData);
     const data = buildResponse(200, true, saved);
+    return response.status(200).json(data).end();
+  }
+);
+
+bookRoutes.post(
+  "/:bookId/reviews",
+  celebrate({ params: bookIdSchema, body: reviewSchema }),
+  async (request: Request, response: Response) => {
+    const loggedInUser = response.locals.user as JWTUser;
+    const { bookId } = request.params;
+    const { review } = request.body;
+    const reviewData = {
+      user: loggedInUser.id,
+      book: bookId,
+      review,
+    } as BookReviewInterface;
+
+    const reviewResponse = await new BookService().addReview(reviewData);
+    const data = buildResponse(200, true, reviewResponse);
+    return response.status(200).json(data).end();
+  }
+);
+
+bookRoutes.get(
+  "/:bookId/reviews",
+  async (request: Request, response: Response) => {
+    const filter = getFilter(request);
+    const { bookId } = request.params;
+    const savedBooks = await new BookService().getBookReviews(bookId, filter);
+    const data = buildResponse(200, true, savedBooks);
     return response.status(200).json(data).end();
   }
 );

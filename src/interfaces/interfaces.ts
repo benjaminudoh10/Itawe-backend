@@ -42,3 +42,9 @@ export interface SavedBookInterface {
   user: string;
   book: string;
 }
+
+export interface BookReviewInterface {
+  user: string;
+  book: string;
+  review: string;
+}
